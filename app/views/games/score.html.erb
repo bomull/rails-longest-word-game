@@ -1,0 +1,29 @@
+<% require 'json' %>
+<% require 'open-uri' %>
+
+<% attempt = params['attempt'].to_s %>
+<%= attempt.class %>
+<%= attempt%>
+
+# <p><%= params %></p>
+<% grid = params['letters'].split %>
+
+
+<% attempt_serialized = open("https://wagon-dictionary.herokuapp.com/#{attempt}").read %>
+<% answer = JSON.parse(attempt_serialized) %>
+
+<% attempt.upcase!.split("").each do |letter| %>
+  <% if grid.index(letter).nil? %>
+    <p><% attempt %> not in the grid!</p>
+  <% else grid.delete_at(grid.index(letter)) %>
+  <% end %>
+<% end %>
+
+<% if !answer["found"] %>
+  <p><%= attempt%> not an english word!</p>
+<% else %>
+  <p>Well done!</p>
+<% end %>
+
+
+<a href="/new">Play again</a>
